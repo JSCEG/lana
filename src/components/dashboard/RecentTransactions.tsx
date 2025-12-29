@@ -42,9 +42,8 @@ export default function RecentTransactions({ transactions, isLoading }: RecentTr
             return (
               <div key={tx.id} className="flex items-center justify-between group">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-full ${
-                    isExpense ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'
-                  }`}>
+                  <div className={`p-2 rounded-full ${isExpense ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'
+                    }`}>
                     {isExpense ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownLeft className="w-4 h-4" />}
                   </div>
                   <div>
@@ -54,9 +53,8 @@ export default function RecentTransactions({ transactions, isLoading }: RecentTr
                     </p>
                   </div>
                 </div>
-                <span className={`text-sm font-semibold whitespace-nowrap ${
-                  isExpense ? 'text-gray-900' : 'text-green-600'
-                }`}>
+                <span className={`text-sm font-semibold whitespace-nowrap ${isExpense ? 'text-gray-900' : 'text-green-600'
+                  }`}>
                   {isExpense ? '-' : '+'}${tx.amount.toLocaleString('es-MX', { minimumFractionDigits: 0 })}
                 </span>
               </div>
