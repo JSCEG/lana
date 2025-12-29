@@ -16,6 +16,7 @@ export interface Transaction {
   type: 'fixed_expense' | 'variable_expense' | 'income';
   frequency: 'one_time' | 'monthly' | 'yearly';
   created_at: string;
+  notes?: string;
   category?: Category;
 }
 

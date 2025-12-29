@@ -64,6 +64,12 @@ export default function TransactionList({ transactions, onDelete, isLoading }: T
                   <span>•</span>
                   <span>{format(new Date(tx.date), "d 'de' MMM, yyyy", { locale: es })}</span>
                 </div>
+                {tx.notes && (
+                  <div className="flex items-center gap-1 mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    <StickyNote className="w-3 h-3" />
+                    <p className="line-clamp-1">{tx.notes}</p>
+                  </div>
+                )}
               </div>
             </div>
 

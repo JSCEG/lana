@@ -178,6 +178,13 @@ export default function Home() {
           isLoading={isLoading}
         />
       </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <UpcomingPayments
+          transactions={dashboardData.allTransactions}
+          isLoading={isLoading}
+        />
+      </div>
     </div>
   );
 }

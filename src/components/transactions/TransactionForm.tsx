@@ -13,6 +13,7 @@ const transactionSchema = z.object({
   type: z.enum(['fixed_expense', 'variable_expense', 'income']),
   frequency: z.enum(['one_time', 'monthly', 'yearly']),
   date: z.string(),
+  notes: z.string().optional(),
 });
 
 type TransactionFormData = z.infer<typeof transactionSchema>;
@@ -85,6 +86,7 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
         category_id: categoryId,
         amount: data.amount,
         description: data.description,
+        notes: data.notes,
         date: data.date,
         type: data.type,
         frequency: data.frequency,
@@ -163,11 +165,20 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">Fecha</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Fecha</label>
           <input
             type="date"
             {...register('date')}
             className="input-primary p-2.5"
+          />
+        </div>
+
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Notas (Opcional)</label>
+          <textarea
+            {...register('notes')}
+            className="input-primary p-2.5 min-h-[80px]"
+            placeholder="Detalles adicionales..."
           />
         </div>
 
