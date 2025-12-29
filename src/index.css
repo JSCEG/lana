@@ -1,14 +1,74 @@
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   line-height: 1.5;
   font-weight: 400;
+
+  /* Lana Brand Colors */
+  --lana-bg: #0B0F1A;
+  --lana-cyan: #6EE7F9;
+  --lana-violet: #A78BFA;
+  --lana-pink: #F472B6;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  @apply transition-colors duration-300 ease-in-out bg-[#0B0F1A] text-white;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-heading {
+  font-family: 'Satoshi', sans-serif;
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/5 backdrop-blur-[20px] border border-white/10;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+  }
+
+  .glass-card {
+    @apply glass rounded-xl p-6;
+  }
+
+  .glow-text {
+    filter: drop-shadow(0 0 10px rgba(110, 231, 249, 0.5));
+  }
+
+  .input-primary {
+    @apply mt-1 block w-full rounded-md border-gray-700 bg-gray-900/50 text-white shadow-sm focus:border-[#6EE7F9] focus:ring-[#6EE7F9] sm:text-sm backdrop-blur-sm;
+  }
+
+  .btn-primary {
+    @apply inline-flex justify-center rounded-md border border-transparent bg-gradient-to-r from-[#A78BFA] to-[#F472B6] py-2 px-4 text-sm font-medium text-white shadow-lg hover:shadow-[#A78BFA]/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#6EE7F9] focus:ring-offset-2 focus:ring-offset-[#0B0F1A];
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500;
 }

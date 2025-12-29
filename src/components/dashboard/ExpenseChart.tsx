@@ -12,24 +12,24 @@ interface ExpenseChartProps {
   isLoading: boolean;
 }
 
-const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4'];
+const COLORS = ['#F472B6', '#A78BFA', '#6EE7F9', '#818CF8', '#34D399', '#FBBF24', '#60A5FA'];
 
 export default function ExpenseChart({ data, isLoading }: ExpenseChartProps) {
   if (isLoading) {
-    return <div className="h-80 bg-gray-100 rounded-xl animate-pulse" />;
+    return <div className="h-80 bg-white/5 rounded-xl animate-pulse" />;
   }
 
   if (data.length === 0) {
     return (
-      <div className="h-80 bg-white p-6 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
-        <p className="text-gray-500">No hay datos de gastos para mostrar</p>
+      <div className="glass-card h-80 flex flex-col items-center justify-center text-center">
+        <p className="text-gray-400">No hay datos de gastos para mostrar</p>
       </div>
     );
   }
 
   return (
-    <div className="h-80 bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Gastos por Categoría</h3>
+    <div className="glass-card h-80">
+      <h3 className="text-lg font-bold text-white mb-4 font-heading tracking-wide">Gastos por Categoría</h3>
       <div className="h-64 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
@@ -41,6 +41,7 @@ export default function ExpenseChart({ data, isLoading }: ExpenseChartProps) {
               outerRadius={80}
               paddingAngle={5}
               dataKey="value"
+              stroke="none"
             >
               {data.map((_entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -48,8 +49,17 @@ export default function ExpenseChart({ data, isLoading }: ExpenseChartProps) {
             </Pie>
             <Tooltip
               formatter={(value: number) => [`$${value.toLocaleString('es-MX')}`, 'Monto']}
+              contentStyle={{
+                backgroundColor: 'rgba(11, 15, 26, 0.9)',
+                borderRadius: '12px',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.36)',
+                backdropFilter: 'blur(10px)',
+                color: '#fff'
+              }}
+              itemStyle={{ color: '#fff' }}
             />
-            <Legend />
+            <Legend wrapperStyle={{ color: '#9ca3af' }} />
           </PieChart>
         </ResponsiveContainer>
       </div>

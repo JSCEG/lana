@@ -104,89 +104,89 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 glass-card">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold text-gray-900">Nueva Transacción</h3>
-        <button type="button" onClick={onCancel} className="text-gray-400 hover:text-gray-600">
+        <h3 className="text-lg font-bold text-white font-heading">Nueva Transacción</h3>
+        <button type="button" onClick={onCancel} className="text-gray-400 hover:text-white transition-colors">
           <X className="w-5 h-5" />
         </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
+          <label className="block text-sm font-medium text-gray-300 mb-1">Tipo</label>
           <select
             {...register('type')}
-            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2.5 border"
+            className="input-primary p-2.5"
           >
-            <option value="variable_expense">Gasto Variable</option>
-            <option value="fixed_expense">Gasto Fijo</option>
-            <option value="income">Ingreso</option>
+            <option value="variable_expense" className="bg-[#0B0F1A]">Gasto Variable</option>
+            <option value="fixed_expense" className="bg-[#0B0F1A]">Gasto Fijo</option>
+            <option value="income" className="bg-[#0B0F1A]">Ingreso</option>
           </select>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Monto</label>
+          <label className="block text-sm font-medium text-gray-300 mb-1">Monto</label>
           <div className="relative">
             <span className="absolute left-3 top-2.5 text-gray-500">$</span>
             <input
               type="number"
               step="0.01"
               {...register('amount', { valueAsNumber: true })}
-              className="pl-7 w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2.5 border"
+              className="input-primary pl-7 p-2.5"
               placeholder="0.00"
             />
           </div>
-          {errors.amount && <p className="text-red-500 text-xs mt-1">{errors.amount.message}</p>}
+          {errors.amount && <p className="text-[#F472B6] text-xs mt-1">{errors.amount.message}</p>}
         </div>
 
         <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+          <label className="block text-sm font-medium text-gray-300 mb-1">Descripción</label>
           <input
             type="text"
             {...register('description')}
-            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2.5 border"
+            className="input-primary p-2.5"
             placeholder="Ej: Compra de supermercado"
           />
-          {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description.message}</p>}
+          {errors.description && <p className="text-[#F472B6] text-xs mt-1">{errors.description.message}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
+          <label className="block text-sm font-medium text-gray-300 mb-1">Categoría</label>
           <input
             type="text"
             {...register('category_name')}
-            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2.5 border"
+            className="input-primary p-2.5"
             placeholder="Ej: Alimentación, Transporte"
           />
-          {errors.category_name && <p className="text-red-500 text-xs mt-1">{errors.category_name.message}</p>}
+          {errors.category_name && <p className="text-[#F472B6] text-xs mt-1">{errors.category_name.message}</p>}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Fecha</label>
+          <label className="block text-sm font-medium text-gray-300 mb-1">Fecha</label>
           <input
             type="date"
             {...register('date')}
-            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2.5 border"
+            className="input-primary p-2.5"
           />
         </div>
 
         {type === 'fixed_expense' && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Frecuencia</label>
+            <label className="block text-sm font-medium text-gray-300 mb-1">Frecuencia</label>
             <select
               {...register('frequency')}
-              className="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2.5 border"
+              className="input-primary p-2.5"
             >
-              <option value="monthly">Mensual</option>
-              <option value="yearly">Anual</option>
+              <option value="monthly" className="bg-[#0B0F1A]">Mensual</option>
+              <option value="yearly" className="bg-[#0B0F1A]">Anual</option>
             </select>
           </div>
         )}
       </div>
 
       {error && (
-        <div className="text-red-500 text-sm bg-red-50 p-2 rounded">
+        <div className="text-red-300 text-sm bg-red-900/20 border border-red-500/20 p-2 rounded">
           {error}
         </div>
       )}
@@ -195,14 +195,14 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+          className="px-4 py-2 text-sm font-medium text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-colors"
         >
           Cancelar
         </button>
         <button
           type="submit"
           disabled={isLoading}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white btn-primary disabled:opacity-50"
         >
           {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
           Guardar Transacción

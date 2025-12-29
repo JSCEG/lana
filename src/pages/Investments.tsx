@@ -86,50 +86,50 @@ export default function Investments() {
     <div className="max-w-6xl mx-auto space-y-8">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Portafolio de Inversiones</h2>
-          <p className="text-gray-500">Monitorea el rendimiento de tus activos</p>
+          <h2 className="text-2xl font-bold text-white font-heading tracking-wide">Portafolio de Inversiones</h2>
+          <p className="text-gray-400">Monitorea el rendimiento de tus activos</p>
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 btn-primary rounded-lg transition-colors"
         >
           {showForm ? 'Cancelar' : <><Plus className="w-4 h-4" /> Nuevo Activo</>}
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="glass-card space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             <div className="lg:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nombre del Activo</label>
-              <input {...register('name')} placeholder="Ej: Apple Inc." className="w-full rounded-lg border p-2.5" />
+              <label className="block text-sm font-medium text-gray-300 mb-1">Nombre del Activo</label>
+              <input {...register('name')} placeholder="Ej: Apple Inc." className="input-primary p-2.5" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
-              <select {...register('asset_type')} className="w-full rounded-lg border p-2.5">
-                <option value="Stock">Acciones</option>
-                <option value="Crypto">Criptomonedas</option>
-                <option value="Bond">Bonos</option>
-                <option value="Real Estate">Bienes Raíces</option>
-                <option value="ETF">ETF</option>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Tipo</label>
+              <select {...register('asset_type')} className="input-primary p-2.5">
+                <option value="Stock" className="bg-[#0B0F1A]">Acciones</option>
+                <option value="Crypto" className="bg-[#0B0F1A]">Criptomonedas</option>
+                <option value="Bond" className="bg-[#0B0F1A]">Bonos</option>
+                <option value="Real Estate" className="bg-[#0B0F1A]">Bienes Raíces</option>
+                <option value="ETF" className="bg-[#0B0F1A]">ETF</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Inversión Inicial</label>
-              <input type="number" step="0.01" {...register('invested_amount', { valueAsNumber: true })} className="w-full rounded-lg border p-2.5" />
+              <label className="block text-sm font-medium text-gray-300 mb-1">Inversión Inicial</label>
+              <input type="number" step="0.01" {...register('invested_amount', { valueAsNumber: true })} className="input-primary p-2.5" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Valor Actual</label>
-              <input type="number" step="0.01" {...register('current_value', { valueAsNumber: true })} className="w-full rounded-lg border p-2.5" />
+              <label className="block text-sm font-medium text-gray-300 mb-1">Valor Actual</label>
+              <input type="number" step="0.01" {...register('current_value', { valueAsNumber: true })} className="input-primary p-2.5" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Fecha Compra</label>
-              <input type="date" {...register('purchase_date')} className="w-full rounded-lg border p-2.5" />
-              {errors.purchase_date && <p className="text-red-500 text-xs mt-1">{errors.purchase_date.message}</p>}
+              <label className="block text-sm font-medium text-gray-300 mb-1">Fecha Compra</label>
+              <input type="date" {...register('purchase_date')} className="input-primary p-2.5" />
+              {errors.purchase_date && <p className="text-[#F472B6] text-xs mt-1">{errors.purchase_date.message}</p>}
             </div>
           </div>
           <div className="flex justify-end">
-            <button type="submit" disabled={saving} className="px-6 py-2 bg-indigo-600 text-white rounded-lg flex items-center gap-2">
+            <button type="submit" disabled={saving} className="px-6 py-2 btn-primary rounded-lg flex items-center gap-2">
               {saving && <Loader2 className="w-4 h-4 animate-spin" />} Registrar
             </button>
           </div>
@@ -138,7 +138,7 @@ export default function Investments() {
 
       <div className="grid grid-cols-1 gap-4">
         {/* Header Row */}
-        <div className="hidden md:grid grid-cols-5 gap-4 px-6 py-3 bg-gray-50 rounded-lg text-sm font-medium text-gray-500">
+        <div className="hidden md:grid grid-cols-5 gap-4 px-6 py-3 bg-white/5 rounded-lg text-sm font-medium text-gray-400">
           <div className="col-span-2">Activo</div>
           <div className="text-right">Inversión</div>
           <div className="text-right">Valor Actual</div>
@@ -146,41 +146,41 @@ export default function Investments() {
         </div>
 
         {loading ? (
-          [1, 2, 3].map(i => <div key={i} className="h-16 bg-gray-100 rounded-xl animate-pulse" />)
+          [1, 2, 3].map(i => <div key={i} className="h-16 bg-white/5 rounded-xl animate-pulse" />)
         ) : (
           investments.map((inv) => {
             const { diff, percentage } = calculateReturn(inv.invested_amount, inv.current_value);
             const isPositive = diff >= 0;
 
             return (
-              <div key={inv.id} className="bg-white p-4 md:px-6 rounded-xl border border-gray-100 shadow-sm flex flex-col md:grid md:grid-cols-5 gap-4 items-center hover:bg-gray-50 transition-colors">
+              <div key={inv.id} className="glass-card flex flex-col md:grid md:grid-cols-5 gap-4 items-center hover:bg-white/5 transition-colors">
                 <div className="w-full md:col-span-2 flex items-center gap-3">
-                  <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
+                  <div className="p-2 bg-[#A78BFA]/10 rounded-lg text-[#A78BFA]">
                     <DollarSign className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">{inv.name}</h3>
-                    <p className="text-xs text-gray-500">{inv.asset_type}</p>
+                    <h3 className="font-semibold text-white">{inv.name}</h3>
+                    <p className="text-xs text-gray-400">{inv.asset_type}</p>
                   </div>
                 </div>
 
                 <div className="w-full md:w-auto flex justify-between md:block text-right">
-                  <span className="md:hidden text-sm text-gray-500">Inversión:</span>
-                  <p className="font-medium text-gray-900">${inv.invested_amount.toLocaleString()}</p>
+                  <span className="md:hidden text-sm text-gray-400">Inversión:</span>
+                  <p className="font-medium text-white">${inv.invested_amount.toLocaleString()}</p>
                 </div>
 
                 <div className="w-full md:w-auto flex justify-between md:block text-right">
-                  <span className="md:hidden text-sm text-gray-500">Valor Actual:</span>
-                  <p className="font-bold text-gray-900">${inv.current_value.toLocaleString()}</p>
+                  <span className="md:hidden text-sm text-gray-400">Valor Actual:</span>
+                  <p className="font-bold text-white">${inv.current_value.toLocaleString()}</p>
                 </div>
 
                 <div className="w-full md:w-auto flex justify-between md:block text-right">
-                  <span className="md:hidden text-sm text-gray-500">Rendimiento:</span>
-                  <div className={`flex items-center justify-end gap-1 ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+                  <span className="md:hidden text-sm text-gray-400">Rendimiento:</span>
+                  <div className={`flex items-center justify-end gap-1 ${isPositive ? 'text-[#6EE7F9]' : 'text-[#F472B6]'}`}>
                     {isPositive ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                     <span className="font-bold">{percentage.toFixed(2)}%</span>
                   </div>
-                  <p className={`text-xs ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+                  <p className={`text-xs ${isPositive ? 'text-[#6EE7F9]' : 'text-[#F472B6]'}`}>
                     {isPositive ? '+' : ''}${diff.toLocaleString()}
                   </p>
                 </div>

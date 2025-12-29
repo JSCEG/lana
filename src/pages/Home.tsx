@@ -5,16 +5,21 @@ import SummaryCards from '@/components/dashboard/SummaryCards';
 import ExpenseChart from '@/components/dashboard/ExpenseChart';
 import RecentTransactions from '@/components/dashboard/RecentTransactions';
 import { Transaction } from '@/types';
+import { FileText, Download, Loader2 } from 'lucide-react';
+import { exportToExcel, exportToPDF } from '@/utils/exportUtils';
+import { format } from 'date-fns';
 
 export default function Home() {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
+  const [isExporting, setIsExporting] = useState(false);
   const [dashboardData, setDashboardData] = useState({
     totalBalance: 0,
     totalIncome: 0,
     totalExpenses: 0,
     savingsRate: 0,
     recentTransactions: [] as Transaction[],
+    allTransactions: [] as Transaction[],
     expenseByCategory: [] as { name: string; value: number; color: string }[]
   });
 
@@ -65,6 +70,7 @@ export default function Home() {
           totalExpenses: expenses,
           savingsRate: income > 0 ? ((income - expenses) / income) * 100 : 0,
           recentTransactions: transactions.slice(0, 5) as unknown as Transaction[],
+          allTransactions: transactions as unknown as Transaction[],
           expenseByCategory: chartData
         });
 
@@ -78,11 +84,80 @@ export default function Home() {
     fetchDashboardData();
   }, [user]);
 
+  const handleExportExcel = async () => {
+    setIsExporting(true);
+    try {
+      const data = dashboardData.allTransactions.map(t => ({
+        Fecha: format(new Date(t.date), 'dd/MM/yyyy'),
+        Descripción: t.description,
+        Categoría: t.category?.name || 'General',
+        Tipo: t.type === 'income' ? 'Ingreso' : 'Gasto',
+        Monto: Number(t.amount)
+      }));
+      
+      exportToExcel(data, `Reporte_Finanzas_${format(new Date(), 'yyyyMMdd')}`);
+    } catch (error) {
+      console.error('Error exporting to Excel:', error);
+      alert('Error al exportar a Excel');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleExportPDF = async () => {
+    setIsExporting(true);
+    try {
+      const columns = ['Fecha', 'Descripción', 'Categoría', 'Tipo', 'Monto'];
+      const data = dashboardData.allTransactions.map(t => [
+        format(new Date(t.date), 'dd/MM/yyyy'),
+        t.description,
+        t.category?.name || 'General',
+        t.type === 'income' ? 'Ingreso' : 'Gasto',
+        `$${Number(t.amount).toLocaleString('es-MX')}`
+      ]);
+
+      exportToPDF(
+        'Reporte de Movimientos Financieros',
+        columns,
+        data,
+        `Reporte_Finanzas_${format(new Date(), 'yyyyMMdd')}`
+      );
+    } catch (error) {
+      console.error('Error exporting to PDF:', error);
+      alert('Error al exportar a PDF');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900">Hola, {user?.user_metadata?.full_name?.split(' ')[0] || 'Usuario'} 👋</h2>
-        <p className="text-gray-500">Aquí está el resumen de tus finanzas</p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Hola, {user?.user_metadata?.full_name?.split(' ')[0] || 'Usuario'} 👋
+          </h2>
+          <p className="text-gray-500 dark:text-gray-400">Aquí está el resumen de tus finanzas</p>
+        </div>
+        
+        <div className="flex gap-2">
+          <button
+            onClick={handleExportExcel}
+            disabled={isExporting || isLoading}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+          >
+            {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
+            Excel
+          </button>
+          <button
+            onClick={handleExportPDF}
+            disabled={isExporting || isLoading}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+          >
+            {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+            PDF
+          </button>
+        </div>
       </div>
 
       <SummaryCards

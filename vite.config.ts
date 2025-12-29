@@ -16,6 +16,7 @@ export default defineConfig({
         ],
       },
     }),
+    /*
     traeBadgePlugin({
       variant: 'dark',
       position: 'bottom-right',
@@ -25,6 +26,7 @@ export default defineConfig({
       autoTheme: true,
       autoThemeTarget: '#root'
     }), 
+    */
     tsconfigPaths()
   ],
 })

@@ -58,13 +58,13 @@ export default function Transactions() {
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">Historial de Movimientos</h2>
-          <p className="text-sm text-gray-500">Gestiona tus ingresos y gastos detalladamente</p>
+          <h2 className="text-lg font-bold text-white font-heading tracking-wide">Historial de Movimientos</h2>
+          <p className="text-sm text-gray-400">Gestiona tus ingresos y gastos detalladamente</p>
         </div>
         {!showForm && (
           <button
             onClick={() => setShowForm(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium text-sm"
+            className="flex items-center gap-2 px-4 py-2 btn-primary font-medium text-sm"
           >
             <Plus className="w-4 h-4" />
             Nuevo Movimiento

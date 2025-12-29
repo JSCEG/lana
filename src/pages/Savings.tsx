@@ -94,46 +94,46 @@ export default function Savings() {
     <div className="max-w-5xl mx-auto space-y-8">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Metas de Ahorro</h2>
-          <p className="text-gray-500">Visualiza y alcanza tus objetivos financieros</p>
+          <h2 className="text-2xl font-bold text-white font-heading tracking-wide">Metas de Ahorro</h2>
+          <p className="text-gray-400">Visualiza y alcanza tus objetivos financieros</p>
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          className="flex items-center gap-2 px-4 py-2 btn-primary rounded-lg transition-colors"
         >
           {showForm ? 'Cancelar' : <><Plus className="w-4 h-4" /> Nueva Meta</>}
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="glass-card space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="lg:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nombre de la Meta</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Nombre de la Meta</label>
               <input
                 {...register('name')}
                 placeholder="Ej: Viaje a Europa"
-                className="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2.5 border"
+                className="input-primary p-2.5"
               />
-              {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
+              {errors.name && <p className="text-[#F472B6] text-xs mt-1">{errors.name.message}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Monto Objetivo</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Monto Objetivo</label>
               <input
                 type="number"
                 step="0.01"
                 {...register('target_amount', { valueAsNumber: true })}
-                className="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2.5 border"
+                className="input-primary p-2.5"
               />
-              {errors.target_amount && <p className="text-red-500 text-xs mt-1">{errors.target_amount.message}</p>}
+              {errors.target_amount && <p className="text-[#F472B6] text-xs mt-1">{errors.target_amount.message}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Ahorro Inicial</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Ahorro Inicial</label>
               <input
                 type="number"
                 step="0.01"
                 {...register('current_amount', { valueAsNumber: true })}
-                className="w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2.5 border"
+                className="input-primary p-2.5"
               />
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function Savings() {
             <button
               type="submit"
               disabled={saving}
-              className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 flex items-center gap-2"
+              className="px-6 py-2 btn-primary rounded-lg disabled:opacity-50 flex items-center gap-2"
             >
               {saving && <Loader2 className="w-4 h-4 animate-spin" />}
               Crear Meta
@@ -152,7 +152,7 @@ export default function Savings() {
 
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[1, 2, 3].map(i => <div key={i} className="h-40 bg-gray-100 rounded-xl animate-pulse" />)}
+          {[1, 2, 3].map(i => <div key={i} className="h-40 bg-white/5 rounded-xl animate-pulse" />)}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -161,7 +161,7 @@ export default function Savings() {
             const isCompleted = percentage === 100;
 
             return (
-              <div key={goal.id} className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+              <div key={goal.id} className="glass-card hover:bg-white/5 transition-colors relative overflow-hidden">
                 {isCompleted && (
                   <div className="absolute top-0 right-0 bg-yellow-400 p-2 rounded-bl-xl shadow-sm">
                     <Trophy className="w-5 h-5 text-white" />
@@ -169,24 +169,24 @@ export default function Savings() {
                 )}
 
                 <div className="flex items-center gap-3 mb-4">
-                  <div className={`p-2 rounded-lg ${isCompleted ? 'bg-yellow-50 text-yellow-600' : 'bg-blue-50 text-blue-600'}`}>
+                  <div className={`p-2 rounded-lg ${isCompleted ? 'bg-yellow-500/20 text-yellow-400' : 'bg-[#6EE7F9]/10 text-[#6EE7F9]'}`}>
                     <Target className="w-6 h-6" />
                   </div>
-                  <h3 className="font-bold text-gray-900 truncate flex-1">{goal.name}</h3>
+                  <h3 className="font-bold text-white truncate flex-1">{goal.name}</h3>
                 </div>
 
                 <div className="space-y-4">
                   <div className="flex justify-between items-end">
                     <div>
-                      <p className="text-sm text-gray-500">Progreso</p>
-                      <p className="text-2xl font-bold text-gray-900">${goal.current_amount.toLocaleString()}</p>
+                      <p className="text-sm text-gray-400">Progreso</p>
+                      <p className="text-2xl font-bold text-white">${goal.current_amount.toLocaleString()}</p>
                     </div>
-                    <p className="text-sm font-medium text-gray-500 mb-1">de ${goal.target_amount.toLocaleString()}</p>
+                    <p className="text-sm font-medium text-gray-400 mb-1">de ${goal.target_amount.toLocaleString()}</p>
                   </div>
 
-                  <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="h-3 bg-white/10 rounded-full overflow-hidden">
                     <div
-                      className={`h-full rounded-full transition-all duration-1000 ${isCompleted ? 'bg-yellow-400' : 'bg-blue-600'
+                      className={`h-full rounded-full transition-all duration-1000 ${isCompleted ? 'bg-yellow-400' : 'bg-[#6EE7F9]'
                         }`}
                       style={{ width: `${percentage}%` }}
                     />
@@ -198,7 +198,7 @@ export default function Savings() {
                         const add = Number(prompt('Monto a agregar:'));
                         if (add > 0) updateProgress(goal.id, goal.current_amount + add);
                       }}
-                      className="flex-1 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                      className="flex-1 py-2 text-sm font-medium text-[#6EE7F9] bg-[#6EE7F9]/10 rounded-lg hover:bg-[#6EE7F9]/20 transition-colors"
                     >
                       + Agregar Fondos
                     </button>
