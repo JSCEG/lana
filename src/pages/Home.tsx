@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import SummaryCards from '@/components/dashboard/SummaryCards';
 import ExpenseChart from '@/components/dashboard/ExpenseChart';
 import RecentTransactions from '@/components/dashboard/RecentTransactions';
+import UpcomingPayments from '@/components/dashboard/UpcomingPayments';
 import { Transaction } from '@/types';
 import { FileText, Download, Loader2 } from 'lucide-react';
 import { exportToExcel, exportToPDF } from '@/utils/exportUtils';

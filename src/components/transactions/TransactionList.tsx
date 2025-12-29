@@ -1,18 +1,7 @@
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { ArrowDownLeft, ArrowUpRight, Calendar, Trash2 } from 'lucide-react';
-
-interface Transaction {
-  id: string;
-  amount: number;
-  description: string;
-  date: string;
-  type: 'fixed_expense' | 'variable_expense' | 'income';
-  category?: {
-    name: string;
-    color: string;
-  };
-}
+import { ArrowDownLeft, ArrowUpRight, Calendar, Trash2, StickyNote } from 'lucide-react';
+import { Transaction } from '@/types';
 
 interface TransactionListProps {
   transactions: Transaction[];
