@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import SummaryCards from '@/components/dashboard/SummaryCards';
 import ExpenseChart from '@/components/dashboard/ExpenseChart';
 import RecentTransactions from '@/components/dashboard/RecentTransactions';
+import { Transaction } from '@/types';
 
 export default function Home() {
   const { user } = useAuth();
@@ -13,14 +14,14 @@ export default function Home() {
     totalIncome: 0,
     totalExpenses: 0,
     savingsRate: 0,
-    recentTransactions: [],
-    expenseByCategory: []
+    recentTransactions: [] as Transaction[],
+    expenseByCategory: [] as { name: string; value: number; color: string }[]
   });
 
   useEffect(() => {
     async function fetchDashboardData() {
       if (!user) return;
-      
+
       try {
         // Fetch transactions for calculations
         const { data: transactions } = await supabase
@@ -37,7 +38,7 @@ export default function Home() {
         const income = transactions
           .filter(t => t.type === 'income')
           .reduce((sum, t) => sum + Number(t.amount), 0);
-          
+
         const expenses = transactions
           .filter(t => t.type.includes('expense'))
           .reduce((sum, t) => sum + Number(t.amount), 0);
@@ -45,8 +46,9 @@ export default function Home() {
         // Calculate expenses by category for chart
         const expensesByCategory = transactions
           .filter(t => t.type.includes('expense'))
-          .reduce((acc: any, t) => {
-            const catName = t.category?.name || 'Otros';
+          .reduce((acc: Record<string, number>, t) => {
+            const tx = t as unknown as Transaction;
+            const catName = tx.category?.name || 'Otros';
             acc[catName] = (acc[catName] || 0) + Number(t.amount);
             return acc;
           }, {});
@@ -62,8 +64,8 @@ export default function Home() {
           totalIncome: income,
           totalExpenses: expenses,
           savingsRate: income > 0 ? ((income - expenses) / income) * 100 : 0,
-          recentTransactions: transactions.slice(0, 5) as any,
-          expenseByCategory: chartData as any
+          recentTransactions: transactions.slice(0, 5) as unknown as Transaction[],
+          expenseByCategory: chartData
         });
 
       } catch (error) {
@@ -92,11 +94,11 @@ export default function Home() {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ExpenseChart 
+        <ExpenseChart
           data={dashboardData.expenseByCategory}
           isLoading={isLoading}
         />
-        <RecentTransactions 
+        <RecentTransactions
           transactions={dashboardData.recentTransactions}
           isLoading={isLoading}
         />

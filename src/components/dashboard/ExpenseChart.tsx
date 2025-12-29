@@ -4,6 +4,7 @@ interface ExpenseCategory {
   name: string;
   value: number;
   color: string;
+  [key: string]: string | number;
 }
 
 interface ExpenseChartProps {
@@ -45,7 +46,7 @@ export default function ExpenseChart({ data, isLoading }: ExpenseChartProps) {
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
-            <Tooltip 
+            <Tooltip
               formatter={(value: number) => [`$${value.toLocaleString('es-MX')}`, 'Monto']}
             />
             <Legend />

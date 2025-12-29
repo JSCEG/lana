@@ -11,7 +11,7 @@ const transactionSchema = z.object({
   description: z.string().min(3, 'La descripción es muy corta'),
   category_name: z.string().min(1, 'Selecciona una categoría'), // Simplificado: guardaremos el nombre por ahora o crearemos categorías al vuelo
   type: z.enum(['fixed_expense', 'variable_expense', 'income']),
-  frequency: z.enum(['one_time', 'monthly', 'yearly']).default('one_time'),
+  frequency: z.enum(['one_time', 'monthly', 'yearly']),
   date: z.string(),
 });
 
@@ -74,7 +74,7 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
           })
           .select()
           .single();
-        
+
         if (catError) throw catError;
         categoryId = newCategory.id;
       }
@@ -94,9 +94,10 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
 
       reset();
       onSuccess();
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
-      setError(err.message || 'Error al guardar la transacción');
+      const message = err instanceof Error ? err.message : 'Error al guardar la transacción';
+      setError(message);
     } finally {
       setIsLoading(false);
     }

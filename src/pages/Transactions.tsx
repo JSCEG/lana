@@ -5,10 +5,12 @@ import { useAuth } from '@/contexts/AuthContext';
 import TransactionForm from '@/components/transactions/TransactionForm';
 import TransactionList from '@/components/transactions/TransactionList';
 
+import { Transaction } from '@/types';
+
 export default function Transactions() {
   const { user } = useAuth();
   const [showForm, setShowForm] = useState(false);
-  const [transactions, setTransactions] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchTransactions = async () => {
@@ -23,7 +25,7 @@ export default function Transactions() {
         .order('date', { ascending: false });
 
       if (error) throw error;
-      setTransactions(data || []);
+      setTransactions(data as unknown as Transaction[] || []);
     } catch (error) {
       console.error('Error fetching transactions:', error);
     } finally {
@@ -33,11 +35,12 @@ export default function Transactions() {
 
   useEffect(() => {
     fetchTransactions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const handleDelete = async (id: string) => {
     if (!confirm('¿Estás seguro de eliminar este movimiento?')) return;
-    
+
     try {
       const { error } = await supabase
         .from('transactions')

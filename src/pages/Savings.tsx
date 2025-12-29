@@ -15,9 +15,11 @@ const savingsSchema = z.object({
 
 type SavingsFormData = z.infer<typeof savingsSchema>;
 
+import { SavingsGoal } from '@/types';
+
 export default function Savings() {
   const { user } = useAuth();
-  const [goals, setGoals] = useState<any[]>([]);
+  const [goals, setGoals] = useState<SavingsGoal[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -36,7 +38,7 @@ export default function Savings() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setGoals(data || []);
+      setGoals(data as SavingsGoal[] || []);
     } catch (error) {
       console.error('Error fetching savings goals:', error);
     } finally {
@@ -46,6 +48,7 @@ export default function Savings() {
 
   useEffect(() => {
     fetchGoals();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const onSubmit = async (data: SavingsFormData) => {
@@ -79,7 +82,7 @@ export default function Savings() {
         .from('savings_goals')
         .update({ current_amount: newAmount })
         .eq('id', id);
-      
+
       if (error) throw error;
       fetchGoals();
     } catch (error) {
@@ -164,7 +167,7 @@ export default function Savings() {
                     <Trophy className="w-5 h-5 text-white" />
                   </div>
                 )}
-                
+
                 <div className="flex items-center gap-3 mb-4">
                   <div className={`p-2 rounded-lg ${isCompleted ? 'bg-yellow-50 text-yellow-600' : 'bg-blue-50 text-blue-600'}`}>
                     <Target className="w-6 h-6" />
@@ -182,10 +185,9 @@ export default function Savings() {
                   </div>
 
                   <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full rounded-full transition-all duration-1000 ${
-                        isCompleted ? 'bg-yellow-400' : 'bg-blue-600'
-                      }`}
+                    <div
+                      className={`h-full rounded-full transition-all duration-1000 ${isCompleted ? 'bg-yellow-400' : 'bg-blue-600'
+                        }`}
                       style={{ width: `${percentage}%` }}
                     />
                   </div>

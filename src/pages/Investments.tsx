@@ -5,6 +5,7 @@ import * as z from 'zod';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2, Plus, TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
+import { Investment } from '@/types';
 
 const investmentSchema = z.object({
   name: z.string().min(3, 'Nombre requerido'),
@@ -18,7 +19,7 @@ type InvestmentFormData = z.infer<typeof investmentSchema>;
 
 export default function Investments() {
   const { user } = useAuth();
-  const [investments, setInvestments] = useState<any[]>([]);
+  const [investments, setInvestments] = useState<Investment[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -40,7 +41,7 @@ export default function Investments() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setInvestments(data || []);
+      setInvestments(data as Investment[] || []);
     } catch (error) {
       console.error('Error fetching investments:', error);
     } finally {
@@ -50,6 +51,7 @@ export default function Investments() {
 
   useEffect(() => {
     fetchInvestments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const onSubmit = async (data: InvestmentFormData) => {
@@ -119,6 +121,11 @@ export default function Investments() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Valor Actual</label>
               <input type="number" step="0.01" {...register('current_value', { valueAsNumber: true })} className="w-full rounded-lg border p-2.5" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Fecha Compra</label>
+              <input type="date" {...register('purchase_date')} className="w-full rounded-lg border p-2.5" />
+              {errors.purchase_date && <p className="text-red-500 text-xs mt-1">{errors.purchase_date.message}</p>}
             </div>
           </div>
           <div className="flex justify-end">

@@ -59,8 +59,9 @@ export default function Login() {
         if (error) throw error;
         navigate('/');
       }
-    } catch (err: any) {
-      setError(err.message || 'Ocurrió un error');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Ocurrió un error';
+      setError(message);
     } finally {
       setIsLoading(false);
     }

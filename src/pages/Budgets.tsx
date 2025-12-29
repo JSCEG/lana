@@ -14,9 +14,11 @@ const budgetSchema = z.object({
 
 type BudgetFormData = z.infer<typeof budgetSchema>;
 
+import { Budget } from '@/types';
+
 export default function Budgets() {
   const { user } = useAuth();
-  const [budgets, setBudgets] = useState<any[]>([]);
+  const [budgets, setBudgets] = useState<Budget[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -55,7 +57,7 @@ export default function Budgets() {
         return { ...budget, spent };
       }));
 
-      setBudgets(budgetsWithProgress);
+      setBudgets(budgetsWithProgress as unknown as Budget[]);
     } catch (error) {
       console.error('Error fetching budgets:', error);
     } finally {
@@ -65,6 +67,7 @@ export default function Budgets() {
 
   useEffect(() => {
     fetchBudgets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const onSubmit = async (data: BudgetFormData) => {
@@ -109,7 +112,7 @@ export default function Budgets() {
         });
 
       if (error) throw error;
-      
+
       reset();
       setShowForm(false);
       fetchBudgets();
@@ -188,7 +191,7 @@ export default function Budgets() {
           {budgets.map((budget) => {
             const percentage = Math.min((budget.spent / budget.amount_limit) * 100, 100);
             const isOverLimit = budget.spent > budget.amount_limit;
-            
+
             return (
               <div key={budget.id} className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex justify-between items-start mb-4">
@@ -215,16 +218,15 @@ export default function Budgets() {
                       ${budget.spent.toLocaleString('es-MX')} / ${budget.amount_limit.toLocaleString('es-MX')}
                     </span>
                   </div>
-                  
+
                   <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full rounded-full transition-all duration-500 ${
-                        isOverLimit ? 'bg-red-500' : percentage > 80 ? 'bg-yellow-500' : 'bg-green-500'
-                      }`}
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${isOverLimit ? 'bg-red-500' : percentage > 80 ? 'bg-yellow-500' : 'bg-green-500'
+                        }`}
                       style={{ width: `${percentage}%` }}
                     />
                   </div>
-                  
+
                   <p className="text-xs text-right text-gray-500">
                     {percentage.toFixed(1)}% utilizado
                   </p>
