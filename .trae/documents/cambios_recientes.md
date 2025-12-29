@@ -41,3 +41,29 @@ Funcionalidad para descargar los datos del dashboard.
 *   `xlsx`: Generación de hojas de cálculo.
 *   `jspdf`: Generación de PDFs.
 *   `jspdf-autotable`: Tablas en PDFs.
+
+## [2024-12-29] - Rebranding a "Lana" y Sistema de Diseño
+
+### 1. Identidad de Marca "Lana"
+Se aplicó un rebranding completo a la aplicación, eliminando referencias anteriores y adoptando la nueva identidad visual.
+
+*   **Banner**: Eliminado el banner de producción de Trae en `vite.config.ts`.
+*   **Logo y Recursos**:
+    *   Integración de logos desde CDN (SassoApps).
+    *   Fondo personalizado y paleta de colores fija (Dark Mode First).
+
+### 2. Sistema de Diseño (Design System)
+Implementación de un sistema de diseño consistente basado en CSS Variables y clases de utilidad Tailwind.
+
+*   **Tipografía**:
+    *   Títulos/Logos: **Satoshi** (via Fontshare).
+    *   UI General: **Inter** (via Google Fonts).
+*   **Colores**:
+    *   Fondo: `#0B0F1A`
+    *   Acentos: Cyan (`#6EE7F9`), Violet (`#A78BFA`), Pink (`#F472B6`).
+*   **Componentes UI**:
+    *   Creación de clases globales `.glass`, `.glass-card`, `.btn-primary`, `.input-primary`.
+    *   Refactorización de todos los formularios y tarjetas para usar el nuevo sistema.
+*   **Layout**:
+    *   Rediseño del Sidebar y Header con efectos de blur y transparencias.
+    *   Iconos con efectos de "glow" (resplandor) al estar activos.

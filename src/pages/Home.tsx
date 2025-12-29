@@ -94,7 +94,7 @@ export default function Home() {
         Tipo: t.type === 'income' ? 'Ingreso' : 'Gasto',
         Monto: Number(t.amount)
       }));
-      
+
       exportToExcel(data, `Reporte_Finanzas_${format(new Date(), 'yyyyMMdd')}`);
     } catch (error) {
       console.error('Error exporting to Excel:', error);
@@ -139,12 +139,12 @@ export default function Home() {
           </h2>
           <p className="text-gray-500 dark:text-gray-400">Aquí está el resumen de tus finanzas</p>
         </div>
-        
+
         <div className="flex gap-2">
           <button
             onClick={handleExportExcel}
             disabled={isExporting || isLoading}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[--lana-cyan] to-[--lana-violet] hover:opacity-90 text-white rounded-lg text-sm font-medium transition-all shadow-lg hover:shadow-[--lana-cyan]/50 disabled:opacity-50"
           >
             {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
             Excel
@@ -152,7 +152,7 @@ export default function Home() {
           <button
             onClick={handleExportPDF}
             disabled={isExporting || isLoading}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[--lana-pink] to-red-500 hover:opacity-90 text-white rounded-lg text-sm font-medium transition-all shadow-lg hover:shadow-[--lana-pink]/50 disabled:opacity-50"
           >
             {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
             PDF

@@ -6,7 +6,7 @@
 - **Framework**: React 18+
 - **Lenguaje**: TypeScript
 - **Build Tool**: Vite
-- **Estilos**: Tailwind CSS (Diseño Utility-First)
+- **Estilos**: Tailwind CSS (Sistema de diseño personalizado "Lana", Glassmorphism, CSS Variables)
 - **Estado Global**: Zustand
 - **Enrutamiento**: React Router DOM
 - **Gráficos**: Recharts

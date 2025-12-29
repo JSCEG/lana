@@ -94,7 +94,7 @@ export default function Savings() {
     <div className="max-w-5xl mx-auto space-y-8">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-white font-heading tracking-wide">Metas de Ahorro</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white font-heading tracking-wide">Metas de Ahorro</h2>
           <p className="text-gray-400">Visualiza y alcanza tus objetivos financieros</p>
         </div>
         <button
@@ -172,14 +172,14 @@ export default function Savings() {
                   <div className={`p-2 rounded-lg ${isCompleted ? 'bg-yellow-500/20 text-yellow-400' : 'bg-[#6EE7F9]/10 text-[#6EE7F9]'}`}>
                     <Target className="w-6 h-6" />
                   </div>
-                  <h3 className="font-bold text-white truncate flex-1">{goal.name}</h3>
+                  <h3 className="font-bold text-gray-900 dark:text-white truncate flex-1">{goal.name}</h3>
                 </div>
 
                 <div className="space-y-4">
                   <div className="flex justify-between items-end">
                     <div>
                       <p className="text-sm text-gray-400">Progreso</p>
-                      <p className="text-2xl font-bold text-white">${goal.current_amount.toLocaleString()}</p>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">${goal.current_amount.toLocaleString()}</p>
                     </div>
                     <p className="text-sm font-medium text-gray-400 mb-1">de ${goal.target_amount.toLocaleString()}</p>
                   </div>

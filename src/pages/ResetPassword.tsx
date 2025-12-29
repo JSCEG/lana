@@ -72,11 +72,11 @@ export default function ResetPassword() {
     <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 glass-card">
         <div className="text-center">
-          <img src="https://cdn.sassoapps.com/lana/lanalogo.png" alt="Lana Logo" className="mx-auto h-12 w-12 object-contain drop-shadow-[0_0_10px_rgba(110,231,249,0.5)]" />
-          <h2 className="mt-6 text-center text-3xl font-bold text-white font-heading tracking-wide">
+          <img src="https://cdn.sassoapps.com/lana/l_lana.png" alt="Lana Logo" className="mx-auto h-24 w-24 object-contain drop-shadow-[0_0_10px_rgba(110,231,249,0.5)]" />
+          <h2 className="mt-6 text-center text-3xl font-bold font-heading tracking-wide">
             Establecer Nueva Contraseña
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-400">
+          <p className="mt-2 text-center text-sm text-gray-500 dark:text-gray-400">
             Ingresa tu nueva contraseña a continuación.
           </p>
         </div>
@@ -120,8 +120,8 @@ export default function ResetPassword() {
           {message && (
             <div
               className={`text-sm text-center p-2 rounded border ${message.type === 'success'
-                  ? 'bg-green-900/20 text-green-300 border-green-500/20'
-                  : 'bg-red-900/20 text-red-300 border-red-500/20'
+                ? 'bg-green-900/20 text-green-300 border-green-500/20'
+                : 'bg-red-900/20 text-red-300 border-red-500/20'
                 }`}
             >
               {message.text}

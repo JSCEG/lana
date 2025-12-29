@@ -38,7 +38,12 @@ Desarrollo de una aplicación web de finanzas personales moderna, segura y escal
 - Estado de presupuestos y metas.
 
 ## 4. Requisitos No Funcionales
-- **UX/UI**: Diseño "Mobile First", intuitivo, modo oscuro/claro (opcional), responsive.
+- **UX/UI**: 
+    - **Marca**: Lana
+    - **Estilo**: Glassmorphism (blur 20px, glow suave), Dark Mode First.
+    - **Tipografía**: Satoshi (Títulos/Logo), Inter (UI).
+    - **Colores**: Fondo (#0B0F1A), Cyan (#6EE7F9), Violet (#A78BFA), Pink (#F472B6).
+    - Diseño "Mobile First", intuitivo, responsive.
 - **Rendimiento**: Carga rápida (<2s), optimización de assets con Vite.
 - **Seguridad**: Autenticación robusta, protección de datos sensibles, RLS en base de datos.
 - **Confiabilidad**: Backups automáticos, validación de datos estricta.

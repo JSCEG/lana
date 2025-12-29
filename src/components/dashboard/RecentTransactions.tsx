@@ -27,7 +27,7 @@ export default function RecentTransactions({ transactions, isLoading }: RecentTr
   return (
     <div className="glass-card h-80 flex flex-col">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-lg font-bold text-white font-heading tracking-wide">Actividad Reciente</h3>
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white font-heading tracking-wide">Actividad Reciente</h3>
         <Link to="/transactions" className="text-sm text-[#A78BFA] hover:text-[#F472B6] font-medium transition-colors">
           Ver todo
         </Link>
@@ -47,13 +47,13 @@ export default function RecentTransactions({ transactions, isLoading }: RecentTr
                     {isExpense ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownLeft className="w-4 h-4" />}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white line-clamp-1">{tx.description}</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white line-clamp-1">{tx.description}</p>
                     <p className="text-xs text-gray-400">
                       {format(new Date(tx.date), "d MMM", { locale: es })} • {tx.category?.name || 'General'}
                     </p>
                   </div>
                 </div>
-                <span className={`text-sm font-semibold whitespace-nowrap ${isExpense ? 'text-white' : 'text-[#6EE7F9]'
+                <span className={`text-sm font-semibold whitespace-nowrap ${isExpense ? 'text-gray-900 dark:text-white' : 'text-[#6EE7F9]'
                   }`}>
                   {isExpense ? '-' : '+'}${tx.amount.toLocaleString('es-MX', { minimumFractionDigits: 0 })}
                 </span>

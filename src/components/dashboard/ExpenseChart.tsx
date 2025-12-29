@@ -29,7 +29,7 @@ export default function ExpenseChart({ data, isLoading }: ExpenseChartProps) {
 
   return (
     <div className="glass-card h-80">
-      <h3 className="text-lg font-bold text-white mb-4 font-heading tracking-wide">Gastos por Categoría</h3>
+      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 font-heading tracking-wide">Gastos por Categoría</h3>
       <div className="h-64 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>

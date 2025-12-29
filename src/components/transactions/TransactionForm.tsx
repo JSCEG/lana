@@ -106,27 +106,27 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 glass-card">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-bold text-white font-heading">Nueva Transacción</h3>
-        <button type="button" onClick={onCancel} className="text-gray-400 hover:text-white transition-colors">
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white font-heading">Nueva Transacción</h3>
+        <button type="button" onClick={onCancel} className="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
           <X className="w-5 h-5" />
         </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">Tipo</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tipo</label>
           <select
             {...register('type')}
             className="input-primary p-2.5"
           >
-            <option value="variable_expense" className="bg-[#0B0F1A]">Gasto Variable</option>
-            <option value="fixed_expense" className="bg-[#0B0F1A]">Gasto Fijo</option>
-            <option value="income" className="bg-[#0B0F1A]">Ingreso</option>
+            <option value="variable_expense">Gasto Variable</option>
+            <option value="fixed_expense">Gasto Fijo</option>
+            <option value="income">Ingreso</option>
           </select>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">Monto</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Monto</label>
           <div className="relative">
             <span className="absolute left-3 top-2.5 text-gray-500">$</span>
             <input
@@ -141,7 +141,7 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
         </div>
 
         <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-300 mb-1">Descripción</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Descripción</label>
           <input
             type="text"
             {...register('description')}
@@ -152,7 +152,7 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-1">Categoría</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Categoría</label>
           <input
             type="text"
             {...register('category_name')}
@@ -173,13 +173,13 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
 
         {type === 'fixed_expense' && (
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">Frecuencia</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Frecuencia</label>
             <select
               {...register('frequency')}
               className="input-primary p-2.5"
             >
-              <option value="monthly" className="bg-[#0B0F1A]">Mensual</option>
-              <option value="yearly" className="bg-[#0B0F1A]">Anual</option>
+              <option value="monthly">Mensual</option>
+              <option value="yearly">Anual</option>
             </select>
           </div>
         )}
@@ -195,7 +195,7 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
         <button
           type="button"
           onClick={onCancel}
-          className="px-4 py-2 text-sm font-medium text-gray-300 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-colors"
+          className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
         >
           Cancelar
         </button>

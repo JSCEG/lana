@@ -127,7 +127,7 @@ export default function Budgets() {
     <div className="max-w-5xl mx-auto space-y-8">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-white font-heading tracking-wide">Presupuestos Mensuales</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white font-heading tracking-wide">Presupuestos Mensuales</h2>
           <p className="text-gray-400">Define límites para mantener tus gastos bajo control</p>
         </div>
         <button
@@ -200,7 +200,7 @@ export default function Budgets() {
                       <PieChart className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-white">{budget.category.name}</h3>
+                      <h3 className="font-semibold text-gray-900 dark:text-white">{budget.category.name}</h3>
                       <p className="text-xs text-gray-400">{budget.period}</p>
                     </div>
                   </div>
@@ -214,7 +214,7 @@ export default function Budgets() {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-400">Gastado</span>
-                    <span className="font-medium text-white">
+                    <span className="font-medium text-gray-900 dark:text-white">
                       ${budget.spent.toLocaleString('es-MX')} / ${budget.amount_limit.toLocaleString('es-MX')}
                     </span>
                   </div>

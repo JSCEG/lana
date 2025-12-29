@@ -58,7 +58,7 @@ export default function Transactions() {
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-lg font-bold text-white font-heading tracking-wide">Historial de Movimientos</h2>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white font-heading tracking-wide">Historial de Movimientos</h2>
           <p className="text-sm text-gray-400">Gestiona tus ingresos y gastos detalladamente</p>
         </div>
         {!showForm && (

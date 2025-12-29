@@ -37,7 +37,7 @@ export default function TransactionList({ transactions, onDelete, isLoading }: T
         <div className="mx-auto w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-3">
           <Calendar className="w-6 h-6 text-gray-400" />
         </div>
-        <h3 className="text-sm font-medium text-white">No hay movimientos</h3>
+        <h3 className="text-sm font-medium text-gray-900 dark:text-white">No hay movimientos</h3>
         <p className="mt-1 text-sm text-gray-400">Registra tu primer gasto o ingreso para comenzar.</p>
       </div>
     );
@@ -58,7 +58,7 @@ export default function TransactionList({ transactions, onDelete, isLoading }: T
                 {isExpense ? <ArrowUpRight className="w-5 h-5" /> : <ArrowDownLeft className="w-5 h-5" />}
               </div>
               <div>
-                <p className="font-medium text-white">{tx.description}</p>
+                <p className="font-medium text-gray-900 dark:text-white">{tx.description}</p>
                 <div className="flex items-center gap-2 text-sm text-gray-400">
                   <span className="capitalize">{tx.category?.name || 'Sin categoría'}</span>
                   <span>•</span>
@@ -68,7 +68,7 @@ export default function TransactionList({ transactions, onDelete, isLoading }: T
             </div>
 
             <div className="flex items-center gap-4">
-              <span className={`font-semibold ${isExpense ? 'text-white' : 'text-[#6EE7F9]'
+              <span className={`font-semibold ${isExpense ? 'text-gray-900 dark:text-white' : 'text-[#6EE7F9]'
                 }`}>
                 {isExpense ? '-' : '+'}${tx.amount.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
               </span>

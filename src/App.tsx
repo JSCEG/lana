@@ -10,6 +10,7 @@ import Transactions from '@/pages/Transactions';
 import Budgets from '@/pages/Budgets';
 import Savings from '@/pages/Savings';
 import Investments from '@/pages/Investments';
+import Profile from '@/pages/Profile';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
               <Route path="/budgets" element={<Budgets />} />
               <Route path="/savings" element={<Savings />} />
               <Route path="/investments" element={<Investments />} />
+              <Route path="/profile" element={<Profile />} />
             </Route>
           </Route>
         </Routes>

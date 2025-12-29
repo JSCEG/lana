@@ -86,7 +86,7 @@ export default function Investments() {
     <div className="max-w-6xl mx-auto space-y-8">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-white font-heading tracking-wide">Portafolio de Inversiones</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white font-heading tracking-wide">Portafolio de Inversiones</h2>
           <p className="text-gray-400">Monitorea el rendimiento de tus activos</p>
         </div>
         <button
@@ -107,11 +107,11 @@ export default function Investments() {
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">Tipo</label>
               <select {...register('asset_type')} className="input-primary p-2.5">
-                <option value="Stock" className="bg-[#0B0F1A]">Acciones</option>
-                <option value="Crypto" className="bg-[#0B0F1A]">Criptomonedas</option>
-                <option value="Bond" className="bg-[#0B0F1A]">Bonos</option>
-                <option value="Real Estate" className="bg-[#0B0F1A]">Bienes Raíces</option>
-                <option value="ETF" className="bg-[#0B0F1A]">ETF</option>
+                <option value="Stock">Acciones</option>
+                <option value="Crypto">Criptomonedas</option>
+                <option value="Bond">Bonos</option>
+                <option value="Real Estate">Bienes Raíces</option>
+                <option value="ETF">ETF</option>
               </select>
             </div>
             <div>
@@ -159,19 +159,19 @@ export default function Investments() {
                     <DollarSign className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-white">{inv.name}</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-white">{inv.name}</h3>
                     <p className="text-xs text-gray-400">{inv.asset_type}</p>
                   </div>
                 </div>
 
                 <div className="w-full md:w-auto flex justify-between md:block text-right">
                   <span className="md:hidden text-sm text-gray-400">Inversión:</span>
-                  <p className="font-medium text-white">${inv.invested_amount.toLocaleString()}</p>
+                  <p className="font-medium text-gray-900 dark:text-white">${inv.invested_amount.toLocaleString()}</p>
                 </div>
 
                 <div className="w-full md:w-auto flex justify-between md:block text-right">
                   <span className="md:hidden text-sm text-gray-400">Valor Actual:</span>
-                  <p className="font-bold text-white">${inv.current_value.toLocaleString()}</p>
+                  <p className="font-bold text-gray-900 dark:text-white">${inv.current_value.toLocaleString()}</p>
                 </div>
 
                 <div className="w-full md:w-auto flex justify-between md:block text-right">
