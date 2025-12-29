@@ -1,0 +1,90 @@
+import { format } from 'date-fns';
+import { es } from 'date-fns/locale';
+import { ArrowDownLeft, ArrowUpRight, Calendar, Trash2 } from 'lucide-react';
+
+interface Transaction {
+  id: string;
+  amount: number;
+  description: string;
+  date: string;
+  type: 'fixed_expense' | 'variable_expense' | 'income';
+  category?: {
+    name: string;
+    color: string;
+  };
+}
+
+interface TransactionListProps {
+  transactions: Transaction[];
+  onDelete: (id: string) => void;
+  isLoading: boolean;
+}
+
+export default function TransactionList({ transactions, onDelete, isLoading }: TransactionListProps) {
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="h-20 bg-gray-100 rounded-xl animate-pulse" />
+        ))}
+      </div>
+    );
+  }
+
+  if (transactions.length === 0) {
+    return (
+      <div className="text-center py-12 bg-white rounded-xl border border-gray-100">
+        <div className="mx-auto w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-3">
+          <Calendar className="w-6 h-6 text-gray-400" />
+        </div>
+        <h3 className="text-sm font-medium text-gray-900">No hay movimientos</h3>
+        <p className="mt-1 text-sm text-gray-500">Registra tu primer gasto o ingreso para comenzar.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {transactions.map((tx) => {
+        const isExpense = tx.type.includes('expense');
+        return (
+          <div
+            key={tx.id}
+            className="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100 hover:shadow-sm transition-shadow group"
+          >
+            <div className="flex items-center gap-4">
+              <div className={`p-2 rounded-full ${
+                isExpense ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'
+              }`}>
+                {isExpense ? <ArrowUpRight className="w-5 h-5" /> : <ArrowDownLeft className="w-5 h-5" />}
+              </div>
+              <div>
+                <p className="font-medium text-gray-900">{tx.description}</p>
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <span className="capitalize">{tx.category?.name || 'Sin categoría'}</span>
+                  <span>•</span>
+                  <span>{format(new Date(tx.date), "d 'de' MMM, yyyy", { locale: es })}</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <span className={`font-semibold ${
+                isExpense ? 'text-gray-900' : 'text-green-600'
+              }`}>
+                {isExpense ? '-' : '+'}${tx.amount.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
+              </span>
+              <button
+                onClick={() => onDelete(tx.id)}
+                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+                title="Eliminar"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
