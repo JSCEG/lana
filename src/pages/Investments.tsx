@@ -12,7 +12,7 @@ const investmentSchema = z.object({
   asset_type: z.string().min(1, 'Tipo requerido'),
   invested_amount: z.number().min(0.01, 'Monto inválido'),
   current_value: z.number().min(0, 'Valor inválido'),
-  quantity: z.number().min(0.000001, 'Cantidad inválida').default(1),
+  quantity: z.number().min(0.000001, 'Cantidad inválida'),
   purchase_date: z.string(),
 });
 
