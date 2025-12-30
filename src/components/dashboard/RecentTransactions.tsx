@@ -17,9 +17,10 @@ interface Transaction {
 interface RecentTransactionsProps {
   transactions: Transaction[];
   isLoading: boolean;
+  onTransactionClick?: (description: string) => void;
 }
 
-export default function RecentTransactions({ transactions, isLoading }: RecentTransactionsProps) {
+export default function RecentTransactions({ transactions, isLoading, onTransactionClick }: RecentTransactionsProps) {
   if (isLoading) {
     return <div className="h-80 bg-white/5 rounded-xl animate-pulse" />;
   }
@@ -40,7 +41,11 @@ export default function RecentTransactions({ transactions, isLoading }: RecentTr
           transactions.map((tx) => {
             const isExpense = tx.type.includes('expense');
             return (
-              <div key={tx.id} className="flex items-center justify-between group">
+              <div
+                key={tx.id}
+                className="flex items-center justify-between group cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 p-2 rounded-lg transition-colors"
+                onClick={() => onTransactionClick?.(tx.description)}
+              >
                 <div className="flex items-center gap-3">
                   <div className={`p-2 rounded-full ${isExpense ? 'bg-[#F472B6]/10 text-[#F472B6]' : 'bg-[#6EE7F9]/10 text-[#6EE7F9]'
                     }`}>

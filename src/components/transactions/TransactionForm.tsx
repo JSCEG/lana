@@ -1,15 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Loader2, Plus, X } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
+import { Transaction } from '@/types';
 
 const transactionSchema = z.object({
   amount: z.number().min(0.01, 'El monto debe ser mayor a 0'),
   description: z.string().min(3, 'La descripción es muy corta'),
-  category_name: z.string().min(1, 'Selecciona una categoría'), // Simplificado: guardaremos el nombre por ahora o crearemos categorías al vuelo
+  category_name: z.string().min(1, 'Selecciona una categoría'),
   type: z.enum(['fixed_expense', 'variable_expense', 'income']),
   frequency: z.enum(['one_time', 'monthly', 'yearly']),
   date: z.string(),
@@ -21,19 +22,23 @@ type TransactionFormData = z.infer<typeof transactionSchema>;
 interface TransactionFormProps {
   onSuccess: () => void;
   onCancel: () => void;
+  initialData?: Transaction | null;
+  prefillData?: Partial<Transaction> | null;
 }
 
-export default function TransactionForm({ onSuccess, onCancel }: TransactionFormProps) {
+export default function TransactionForm({ onSuccess, onCancel, initialData, prefillData }: TransactionFormProps) {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
 
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-    reset
+    reset,
+    setValue
   } = useForm<TransactionFormData>({
     resolver: zodResolver(transactionSchema),
     defaultValues: {
@@ -43,6 +48,32 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
     }
   });
 
+  useEffect(() => {
+    const data = initialData || prefillData;
+    if (data) {
+      if (data.amount) setValue('amount', data.amount);
+      if (data.description) setValue('description', data.description);
+      if (data.category?.name) setValue('category_name', data.category.name);
+      if (data.type) setValue('type', data.type);
+      if (data.frequency) setValue('frequency', data.frequency);
+      if (data.date) setValue('date', data.date.split('T')[0]);
+      if (data.notes) setValue('notes', data.notes);
+    }
+  }, [initialData, prefillData, setValue]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      if (!user) return;
+      const { data } = await supabase
+        .from('categories')
+        .select('id, name')
+        .eq('user_id', user.id)
+        .order('name');
+      if (data) setCategories(data);
+    };
+    fetchCategories();
+  }, [user]);
+
   const type = watch('type');
 
   const onSubmit = async (data: TransactionFormData) => {
@@ -51,18 +82,12 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
     setError(null);
 
     try {
-      // 1. Primero buscamos o creamos la categoría (lógica simplificada)
-      // En una app real, esto debería ser un select de categorías existentes
       let categoryId;
-      const { data: categories } = await supabase
-        .from('categories')
-        .select('id')
-        .eq('name', data.category_name)
-        .eq('user_id', user.id)
-        .single();
+      // Check if category exists in fetched list (case insensitive)
+      const existingCategory = categories.find(c => c.name.toLowerCase() === data.category_name.toLowerCase());
 
-      if (categories) {
-        categoryId = categories.id;
+      if (existingCategory) {
+        categoryId = existingCategory.id;
       } else {
         const { data: newCategory, error: catError } = await supabase
           .from('categories')
@@ -70,8 +95,8 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
             user_id: user.id,
             name: data.category_name,
             type: data.type === 'income' ? 'income' : 'expense',
-            icon: 'Circle', // Default icon
-            color: '#6366f1' // Default color
+            icon: 'Circle',
+            color: '#6366f1'
           })
           .select()
           .single();
@@ -80,8 +105,7 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
         categoryId = newCategory.id;
       }
 
-      // 2. Insertamos la transacción
-      const { error: txError } = await supabase.from('transactions').insert({
+      const transactionData = {
         user_id: user.id,
         category_id: categoryId,
         amount: data.amount,
@@ -90,7 +114,21 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
         date: data.date,
         type: data.type,
         frequency: data.frequency,
-      });
+      };
+
+      let txError;
+      if (initialData) {
+        const { error } = await supabase
+          .from('transactions')
+          .update(transactionData)
+          .eq('id', initialData.id);
+        txError = error;
+      } else {
+        const { error } = await supabase
+          .from('transactions')
+          .insert(transactionData);
+        txError = error;
+      }
 
       if (txError) throw txError;
 
@@ -108,7 +146,9 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 glass-card">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white font-heading">Nueva Transacción</h3>
+        <h3 className="text-lg font-bold text-gray-900 dark:text-white font-heading">
+          {initialData ? 'Editar Transacción' : 'Nueva Transacción'}
+        </h3>
         <button type="button" onClick={onCancel} className="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
           <X className="w-5 h-5" />
         </button>
@@ -157,10 +197,17 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Categoría</label>
           <input
             type="text"
+            list="categories-list"
             {...register('category_name')}
             className="input-primary p-2.5"
-            placeholder="Ej: Alimentación, Transporte"
+            placeholder="Selecciona o escribe una nueva"
+            autoComplete="off"
           />
+          <datalist id="categories-list">
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.name} />
+            ))}
+          </datalist>
           {errors.category_name && <p className="text-[#F472B6] text-xs mt-1">{errors.category_name.message}</p>}
         </div>
 
@@ -216,7 +263,7 @@ export default function TransactionForm({ onSuccess, onCancel }: TransactionForm
           className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white btn-primary disabled:opacity-50"
         >
           {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
-          Guardar Transacción
+          {initialData ? 'Actualizar' : 'Guardar Transacción'}
         </button>
       </div>
     </form>

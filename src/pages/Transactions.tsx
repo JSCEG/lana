@@ -12,6 +12,7 @@ export default function Transactions() {
   const [showForm, setShowForm] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
 
   const fetchTransactions = async () => {
     if (!user) return;
@@ -54,6 +55,11 @@ export default function Transactions() {
     }
   };
 
+  const handleEdit = (transaction: Transaction) => {
+    setEditingTransaction(transaction);
+    setShowForm(true);
+  };
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -63,7 +69,10 @@ export default function Transactions() {
         </div>
         {!showForm && (
           <button
-            onClick={() => setShowForm(true)}
+            onClick={() => {
+              setEditingTransaction(null);
+              setShowForm(true);
+            }}
             className="flex items-center gap-2 px-4 py-2 btn-primary font-medium text-sm"
           >
             <Plus className="w-4 h-4" />
@@ -74,17 +83,23 @@ export default function Transactions() {
 
       {showForm && (
         <TransactionForm
+          initialData={editingTransaction}
           onSuccess={() => {
             setShowForm(false);
+            setEditingTransaction(null);
             fetchTransactions();
           }}
-          onCancel={() => setShowForm(false)}
+          onCancel={() => {
+            setShowForm(false);
+            setEditingTransaction(null);
+          }}
         />
       )}
 
       <TransactionList
         transactions={transactions}
         onDelete={handleDelete}
+        onEdit={handleEdit}
         isLoading={loading}
       />
     </div>

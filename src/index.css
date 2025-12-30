@@ -25,6 +25,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   --lana-bg: #0B0F1A;
   --lana-text: #ffffff;
   --lana-cyan: #6EE7F9;

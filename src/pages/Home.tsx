@@ -1,10 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 import SummaryCards from '@/components/dashboard/SummaryCards';
 import ExpenseChart from '@/components/dashboard/ExpenseChart';
 import RecentTransactions from '@/components/dashboard/RecentTransactions';
 import UpcomingPayments from '@/components/dashboard/UpcomingPayments';
+import HistoryModal from '@/components/dashboard/HistoryModal';
+import BalanceHistoryChart from '@/components/dashboard/BalanceHistoryChart';
+import CategoryHistoryChart from '@/components/dashboard/CategoryHistoryChart';
+import TransactionForm from '@/components/transactions/TransactionForm';
 import { Transaction } from '@/types';
 import { FileText, Download, Loader2 } from 'lucide-react';
 import { exportToExcel, exportToPDF } from '@/utils/exportUtils';
@@ -24,66 +28,91 @@ export default function Home() {
     expenseByCategory: [] as { name: string; value: number; color: string }[]
   });
 
-  useEffect(() => {
-    async function fetchDashboardData() {
-      if (!user) return;
+  const [historyModal, setHistoryModal] = useState<{ isOpen: boolean; title: string; transactions: Transaction[] }>({
+    isOpen: false,
+    title: '',
+    transactions: []
+  });
 
-      try {
-        // Fetch transactions for calculations
-        const { data: transactions } = await supabase
-          .from('transactions')
-          .select(`
+  const [transactionModal, setTransactionModal] = useState<{ isOpen: boolean; prefillData: Partial<Transaction> | null }>({
+    isOpen: false,
+    prefillData: null
+  });
+
+  const fetchDashboardData = useCallback(async () => {
+    if (!user) return;
+
+    try {
+      // Fetch transactions for calculations
+      const { data: transactions } = await supabase
+        .from('transactions')
+        .select(`
             *,
             category:categories(name)
           `)
-          .order('date', { ascending: false });
+        .order('date', { ascending: false });
 
-        if (!transactions) return;
+      if (!transactions) return;
 
-        // Calculate totals
-        const income = transactions
-          .filter(t => t.type === 'income')
-          .reduce((sum, t) => sum + Number(t.amount), 0);
+      // Calculate totals
+      const income = transactions
+        .filter(t => t.type === 'income')
+        .reduce((sum, t) => sum + Number(t.amount), 0);
 
-        const expenses = transactions
-          .filter(t => t.type.includes('expense'))
-          .reduce((sum, t) => sum + Number(t.amount), 0);
+      const expenses = transactions
+        .filter(t => t.type.includes('expense'))
+        .reduce((sum, t) => sum + Number(t.amount), 0);
 
-        // Calculate expenses by category for chart
-        const expensesByCategory = transactions
-          .filter(t => t.type.includes('expense'))
-          .reduce((acc: Record<string, number>, t) => {
-            const tx = t as unknown as Transaction;
-            const catName = tx.category?.name || 'Otros';
-            acc[catName] = (acc[catName] || 0) + Number(t.amount);
-            return acc;
-          }, {});
+      // Calculate expenses by category for chart
+      const expensesByCategory = transactions
+        .filter(t => t.type.includes('expense'))
+        .reduce((acc: Record<string, number>, t) => {
+          const tx = t as unknown as Transaction;
+          const catName = tx.category?.name || 'Otros';
+          acc[catName] = (acc[catName] || 0) + Number(t.amount);
+          return acc;
+        }, {});
 
-        const chartData = Object.entries(expensesByCategory).map(([name, value]) => ({
-          name,
-          value: Number(value),
-          color: '#6366f1' // Colors handled in component
-        }));
+      const chartData = Object.entries(expensesByCategory).map(([name, value]) => ({
+        name,
+        value: Number(value),
+        color: '#6366f1' // Colors handled in component
+      }));
 
-        setDashboardData({
-          totalBalance: income - expenses,
-          totalIncome: income,
-          totalExpenses: expenses,
-          savingsRate: income > 0 ? ((income - expenses) / income) * 100 : 0,
-          recentTransactions: transactions.slice(0, 5) as unknown as Transaction[],
-          allTransactions: transactions as unknown as Transaction[],
-          expenseByCategory: chartData
-        });
+      setDashboardData({
+        totalBalance: income - expenses,
+        totalIncome: income,
+        totalExpenses: expenses,
+        savingsRate: income > 0 ? ((income - expenses) / income) * 100 : 0,
+        recentTransactions: transactions.slice(0, 5) as unknown as Transaction[],
+        allTransactions: transactions as unknown as Transaction[],
+        expenseByCategory: chartData
+      });
 
-      } catch (error) {
-        console.error('Error loading dashboard:', error);
-      } finally {
-        setIsLoading(false);
-      }
+    } catch (error) {
+      console.error('Error loading dashboard:', error);
+    } finally {
+      setIsLoading(false);
     }
-
-    fetchDashboardData();
   }, [user]);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [fetchDashboardData]);
+
+  const handleUpcomingPaymentClick = (payment: any) => {
+    setTransactionModal({
+      isOpen: true,
+      prefillData: {
+        description: payment.description,
+        amount: payment.amount,
+        category: payment.category,
+        type: 'fixed_expense',
+        frequency: 'one_time',
+        date: payment.nextDate ? format(new Date(payment.nextDate), 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd')
+      }
+    });
+  };
 
   const handleExportExcel = async () => {
     setIsExporting(true);
@@ -131,8 +160,51 @@ export default function Home() {
     }
   };
 
+  const handleCategoryClick = (categoryName: string) => {
+    const filtered = dashboardData.allTransactions.filter(
+      t => (t.category?.name || 'Otros') === categoryName && t.type.includes('expense')
+    );
+    setHistoryModal({
+      isOpen: true,
+      title: `Gastos: ${categoryName}`,
+      transactions: filtered
+    });
+  };
+
+  const handleTransactionClick = (description: string) => {
+    // Filter by description (case insensitive partial match)
+    const filtered = dashboardData.allTransactions.filter(
+      t => t.description.toLowerCase().includes(description.toLowerCase())
+    );
+    setHistoryModal({
+      isOpen: true,
+      title: `Historial: "${description}"`,
+      transactions: filtered
+    });
+  };
+
   return (
     <div className="max-w-7xl mx-auto space-y-6">
+      <HistoryModal
+        isOpen={historyModal.isOpen}
+        onClose={() => setHistoryModal(prev => ({ ...prev, isOpen: false }))}
+        title={historyModal.title}
+        transactions={historyModal.transactions}
+      />
+      {transactionModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="w-full max-w-lg">
+            <TransactionForm
+              prefillData={transactionModal.prefillData}
+              onSuccess={() => {
+                setTransactionModal({ isOpen: false, prefillData: null });
+                fetchDashboardData();
+              }}
+              onCancel={() => setTransactionModal({ isOpen: false, prefillData: null })}
+            />
+          </div>
+        </div>
+      )}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -173,9 +245,24 @@ export default function Home() {
         <ExpenseChart
           data={dashboardData.expenseByCategory}
           isLoading={isLoading}
+          onCategoryClick={handleCategoryClick}
         />
         <RecentTransactions
           transactions={dashboardData.recentTransactions}
+          isLoading={isLoading}
+          onTransactionClick={handleTransactionClick}
+        />
+      </div>
+
+
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <BalanceHistoryChart
+          transactions={dashboardData.allTransactions}
+          isLoading={isLoading}
+        />
+        <CategoryHistoryChart
+          transactions={dashboardData.allTransactions}
           isLoading={isLoading}
         />
       </div>
@@ -184,6 +271,7 @@ export default function Home() {
         <UpcomingPayments
           transactions={dashboardData.allTransactions}
           isLoading={isLoading}
+          onPaymentClick={handleUpcomingPaymentClick}
         />
       </div>
     </div>

@@ -7,9 +7,10 @@ import { Transaction } from '@/types';
 interface UpcomingPaymentsProps {
   transactions: Transaction[];
   isLoading: boolean;
+  onPaymentClick?: (payment: any) => void;
 }
 
-export default function UpcomingPayments({ transactions, isLoading }: UpcomingPaymentsProps) {
+export default function UpcomingPayments({ transactions, isLoading, onPaymentClick }: UpcomingPaymentsProps) {
   if (isLoading) {
     return <div className="h-80 bg-white/5 rounded-xl animate-pulse" />;
   }
@@ -27,10 +28,10 @@ export default function UpcomingPayments({ transactions, isLoading }: UpcomingPa
         } else {
           // Set to current month/year but with original day
           const currentMonthDate = new Date(today.getFullYear(), today.getMonth(), startDate.getDate());
-          
+
           // Check if the day is valid for this month (e.g. 31st in Feb), if not it rolls over, date-fns handles this usually by rolling over
           // But simple construction might be off. date-fns `set` is better but let's stick to simple for now.
-          
+
           if (isAfter(currentMonthDate, today)) {
             nextDate = currentMonthDate;
           } else {
@@ -71,7 +72,11 @@ export default function UpcomingPayments({ transactions, isLoading }: UpcomingPa
           recurringPayments.map((payment) => {
             const isUrgent = payment.daysRemaining <= 3;
             return (
-              <div key={payment.id} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5 hover:border-[--lana-cyan]/30 transition-colors">
+              <div
+                key={payment.id}
+                onClick={() => onPaymentClick?.(payment)}
+                className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/5 hover:border-[--lana-cyan]/30 transition-colors cursor-pointer group"
+              >
                 <div className="flex items-center gap-3">
                   <div className={`p-2 rounded-full ${isUrgent ? 'bg-red-500/10 text-red-500' : 'bg-[--lana-cyan]/10 text-[--lana-cyan]'}`}>
                     {isUrgent ? <AlertCircle className="w-4 h-4" /> : <Clock className="w-4 h-4" />}

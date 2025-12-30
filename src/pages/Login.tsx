@@ -5,10 +5,24 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
-import { Loader2 } from 'lucide-react';
+import { Loader2, CheckCircle } from 'lucide-react';
 
 const loginSchema = z.object({
-  email: z.string().email('Correo inválido'),
+  email: z.string().email('Correo inválido').refine((val) => {
+    const domain = val.split('@')[1];
+    if (!domain) return true;
+    const commonTypos = {
+      'hotmial.com': 'hotmail.com',
+      'gamil.com': 'gmail.com',
+      'yaho.com': 'yahoo.com',
+      'outlok.com': 'outlook.com',
+      'hotmal.com': 'hotmail.com',
+      'gmial.com': 'gmail.com'
+    };
+    return !Object.keys(commonTypos).includes(domain);
+  }, {
+    message: 'Parece que hay un error en el dominio del correo (ej: hotmial -> hotmail)'
+  }),
   password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres'),
   fullName: z.string().optional(),
   address: z.string().optional(),
@@ -27,6 +41,7 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const {
     register,
@@ -60,7 +75,7 @@ export default function Login() {
         if (!data.fullName || !data.address) {
           throw new Error('Faltan datos requeridos');
         }
-        const { error } = await supabase.auth.signUp({
+        const { data: authData, error } = await supabase.auth.signUp({
           email: data.email,
           password: data.password,
           options: {
@@ -70,8 +85,16 @@ export default function Login() {
             },
           },
         });
+
         if (error) throw error;
-        alert('Registro exitoso! Por favor verifica tu correo.');
+
+        // Si hay sesión, el usuario se auto-confirmó (login automático)
+        if (authData.session) {
+          navigate('/');
+        } else {
+          // Si no hay sesión, requiere verificación manual (fallback)
+          setShowSuccessModal(true);
+        }
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email: data.email,
@@ -90,7 +113,15 @@ export default function Login() {
         navigate('/');
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Ocurrió un error';
+      let message = err instanceof Error ? err.message : 'Ocurrió un error';
+
+      // Traducir errores comunes
+      if (message.includes('User already registered') || message.includes('already registered')) {
+        message = 'Este correo ya está registrado. Por favor inicia sesión.';
+      } else if (message.includes('Invalid login credentials')) {
+        message = 'Credenciales inválidas. Verifica tu correo y contraseña.';
+      }
+
       setError(message);
     } finally {
       setIsLoading(false);
@@ -231,6 +262,30 @@ export default function Login() {
           </div>
         </form>
       </div>
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-[#0B0F1A] rounded-2xl w-full max-w-sm p-6 shadow-2xl border border-white/10 text-center animate-in fade-in zoom-in duration-300">
+            <div className="mx-auto w-12 h-12 bg-green-100 dark:bg-green-500/20 rounded-full flex items-center justify-center mb-4">
+              <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">¡Registro Exitoso!</h3>
+            <p className="text-gray-500 dark:text-gray-400 mb-6">
+              Hemos enviado un enlace de confirmación a tu correo electrónico. Por favor verifícalo para iniciar sesión.
+            </p>
+            <button
+              onClick={() => {
+                setShowSuccessModal(false);
+                setIsSignUp(false);
+              }}
+              className="w-full py-2 px-4 btn-primary rounded-lg text-white font-medium shadow-lg hover:shadow-cyan-500/25 transition-all"
+            >
+              Entendido, ir a Iniciar Sesión
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

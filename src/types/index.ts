@@ -47,6 +47,7 @@ export interface Investment {
   asset_type: string;
   invested_amount: number;
   current_value: number;
+  quantity: number;
   purchase_date: string;
   created_at: string;
 }

@@ -1,15 +1,16 @@
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { ArrowDownLeft, ArrowUpRight, Calendar, Trash2, StickyNote } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, Calendar, Trash2, StickyNote, Edit } from 'lucide-react';
 import { Transaction } from '@/types';
 
 interface TransactionListProps {
   transactions: Transaction[];
   onDelete: (id: string) => void;
+  onEdit: (transaction: Transaction) => void;
   isLoading: boolean;
 }
 
-export default function TransactionList({ transactions, onDelete, isLoading }: TransactionListProps) {
+export default function TransactionList({ transactions, onDelete, onEdit, isLoading }: TransactionListProps) {
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -67,13 +68,22 @@ export default function TransactionList({ transactions, onDelete, isLoading }: T
                 }`}>
                 {isExpense ? '-' : '+'}${tx.amount.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
               </span>
-              <button
-                onClick={() => onDelete(tx.id)}
-                className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
-                title="Eliminar"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
+              <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  onClick={() => onEdit(tx)}
+                  className="p-2 text-gray-400 hover:text-[--lana-cyan] hover:bg-[--lana-cyan]/10 rounded-lg transition-colors"
+                  title="Editar"
+                >
+                  <Edit className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => onDelete(tx.id)}
+                  className="p-2 text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                  title="Eliminar"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </div>
         );

@@ -10,11 +10,12 @@ interface ExpenseCategory {
 interface ExpenseChartProps {
   data: ExpenseCategory[];
   isLoading: boolean;
+  onCategoryClick?: (categoryName: string) => void;
 }
 
 const COLORS = ['#F472B6', '#A78BFA', '#6EE7F9', '#818CF8', '#34D399', '#FBBF24', '#60A5FA'];
 
-export default function ExpenseChart({ data, isLoading }: ExpenseChartProps) {
+export default function ExpenseChart({ data, isLoading, onCategoryClick }: ExpenseChartProps) {
   if (isLoading) {
     return <div className="h-80 bg-white/5 rounded-xl animate-pulse" />;
   }
@@ -42,6 +43,8 @@ export default function ExpenseChart({ data, isLoading }: ExpenseChartProps) {
               paddingAngle={5}
               dataKey="value"
               stroke="none"
+              onClick={(data) => onCategoryClick?.(data.name)}
+              className="cursor-pointer outline-none"
             >
               {data.map((_entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
